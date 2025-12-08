@@ -8,6 +8,16 @@ Simple text-to-speech wrapper for [Piper TTS](https://github.com/rhasspy/piper) 
 
 ## Installation
 
+### Arch Linux (AUR)
+
+```bash
+yay -S piper-speak
+```
+
+Includes the default voice model (`en_US-lessac-medium`).
+
+### Manual
+
 ```bash
 git clone https://github.com/kgn/piper-speak.git
 cd piper-speak

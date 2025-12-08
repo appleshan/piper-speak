@@ -7,11 +7,14 @@
 #   --speed  Length scale (default: 0.7, lower = faster)
 #   --bg     Run in background
 
-PIPER_VOICE_DIR="${PIPER_VOICE_DIR:-$HOME/.local/share/piper/voices}"
 PIPER_VOICE="${PIPER_VOICE:-en_US-lessac-medium}"
 SPEED="0.7"
 BACKGROUND=false
 TEXT=""
+
+# Voice search paths (user dir first, then system)
+USER_VOICE_DIR="${PIPER_VOICE_DIR:-$HOME/.local/share/piper/voices}"
+SYSTEM_VOICE_DIR="/usr/share/piper-speak/voices"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -28,8 +31,10 @@ while [[ $# -gt 0 ]]; do
             echo "  --voice NAME  Voice model name (default: en_US-lessac-medium)"
             echo ""
             echo "Environment:"
-            echo "  PIPER_VOICE_DIR  Voice directory (default: ~/.local/share/piper/voices)"
+            echo "  PIPER_VOICE_DIR  User voice directory (default: ~/.local/share/piper/voices)"
             echo "  PIPER_VOICE      Default voice model name"
+            echo ""
+            echo "Voice models are loaded from user dir first, then /usr/share/piper-speak/voices"
             exit 0
             ;;
         -*) echo "Unknown option: $1" >&2; exit 1 ;;
@@ -37,11 +42,14 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-VOICE_PATH="$PIPER_VOICE_DIR/$PIPER_VOICE.onnx"
-
-if [ ! -f "$VOICE_PATH" ]; then
-    echo "Error: Voice model not found: $VOICE_PATH" >&2
-    echo "Run 'piper-speak-install' to download voice models" >&2
+# Find voice model (check user dir first, then system)
+if [ -f "$USER_VOICE_DIR/$PIPER_VOICE.onnx" ]; then
+    VOICE_PATH="$USER_VOICE_DIR/$PIPER_VOICE.onnx"
+elif [ -f "$SYSTEM_VOICE_DIR/$PIPER_VOICE.onnx" ]; then
+    VOICE_PATH="$SYSTEM_VOICE_DIR/$PIPER_VOICE.onnx"
+else
+    echo "Error: Voice model not found: $PIPER_VOICE" >&2
+    echo "Run 'piper-speak-install $PIPER_VOICE' to download it" >&2
     exit 1
 fi
 
