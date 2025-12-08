@@ -9,9 +9,13 @@
 # Suggested keybinding (Hyprland):
 #   bind = SUPER SHIFT, period, exec, speak-selection
 
-# Kill any existing piper/pw-play process (toggle behavior)
-pkill -f "piper-tts.*piper.*voices" 2>/dev/null && exit 0
-pkill -f "pw-play.*/tmp/piper-speak" 2>/dev/null && exit 0
+# Kill any existing piper-speak process (toggle behavior)
+# Kill the main process first, then any stragglers
+if pkill -f "piper-speak" 2>/dev/null; then
+    pkill -f "piper-tts.*piper.*voices" 2>/dev/null
+    pkill -f "pw-play.*/tmp/piper-speak" 2>/dev/null
+    exit 0
+fi
 
 # Get primary selection (highlighted text)
 text=$(wl-paste --primary 2>/dev/null)

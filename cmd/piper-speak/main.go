@@ -186,12 +186,15 @@ func speakChunks(chunks []string, voicePath string, speed float64) {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
-	// Channel for generated wav files ready to play
-	type wavFile struct {
+	// Channel for generated wav files - one per chunk to maintain order
+	type wavResult struct {
 		path string
 		err  error
 	}
-	readyChan := make(chan wavFile, 2) // Buffer of 2 for double buffering
+	chunkChans := make([]chan wavResult, len(chunks))
+	for i := range chunkChans {
+		chunkChans[i] = make(chan wavResult, 1)
+	}
 
 	// Track temp files for cleanup
 	var tempFiles []string
@@ -205,7 +208,7 @@ func speakChunks(chunks []string, voicePath string, speed float64) {
 	// Start generating first chunk
 	go func() {
 		wav, err := generateWav(chunks[0], voicePath, speed, 0)
-		readyChan <- wavFile{wav, err}
+		chunkChans[0] <- wavResult{wav, err}
 	}()
 
 	for i := 0; i < len(chunks); i++ {
@@ -214,15 +217,15 @@ func speakChunks(chunks []string, voicePath string, speed float64) {
 			nextIdx := i + 1
 			go func(idx int) {
 				wav, err := generateWav(chunks[idx], voicePath, speed, idx)
-				readyChan <- wavFile{wav, err}
+				chunkChans[idx] <- wavResult{wav, err}
 			}(nextIdx)
 		}
 
-		// Wait for current chunk to be ready
+		// Wait for THIS specific chunk to be ready (maintains order)
 		select {
 		case <-sigChan:
 			return
-		case wf := <-readyChan:
+		case wf := <-chunkChans[i]:
 			if wf.err != nil {
 				fmt.Fprintf(os.Stderr, "Error generating audio: %v\n", wf.err)
 				continue
