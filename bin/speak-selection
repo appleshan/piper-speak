@@ -1,0 +1,24 @@
+#!/bin/bash
+# speak-selection - Read selected text aloud using Piper TTS
+# Uses primary selection (highlighted text) on Wayland
+#
+# Features:
+#   - Toggle behavior: press hotkey again to stop speaking
+#   - Uses wl-paste to get highlighted text
+#
+# Suggested keybinding (Hyprland):
+#   bind = SUPER SHIFT, period, exec, speak-selection
+
+# Kill any existing piper/pw-play process (toggle behavior)
+pkill -f "piper-tts.*piper/voices" 2>/dev/null && exit 0
+pkill -f "pw-play.*/tmp/piper-speak" 2>/dev/null && exit 0
+
+# Get primary selection (highlighted text)
+text=$(wl-paste --primary 2>/dev/null)
+
+if [ -z "$text" ]; then
+    notify-send -t 2000 "Speak Selection" "No text selected" 2>/dev/null || true
+    exit 0
+fi
+
+echo "$text" | piper-speak --speed 0.8 --bg

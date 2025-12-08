@@ -1,0 +1,74 @@
+#!/bin/bash
+# piper-speak - Simple Piper TTS wrapper
+# Usage: echo "text" | piper-speak [--speed 0.7] [--bg]
+#        piper-speak "text to speak"
+#
+# Options:
+#   --speed  Length scale (default: 0.9, lower = faster)
+#   --bg     Run in background
+
+PIPER_VOICE_DIR="${PIPER_VOICE_DIR:-$HOME/.local/share/piper/voices}"
+PIPER_VOICE="${PIPER_VOICE:-en_US-lessac-medium}"
+SPEED="0.9"
+BACKGROUND=false
+TEXT=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --speed) SPEED="$2"; shift 2 ;;
+        --bg) BACKGROUND=true; shift ;;
+        --voice) PIPER_VOICE="$2"; shift 2 ;;
+        --help|-h)
+            echo "Usage: echo \"text\" | piper-speak [options]"
+            echo "       piper-speak [options] \"text to speak\""
+            echo ""
+            echo "Options:"
+            echo "  --speed NUM   Length scale (default: 0.9, lower = faster)"
+            echo "  --bg          Run in background"
+            echo "  --voice NAME  Voice model name (default: en_US-lessac-medium)"
+            echo ""
+            echo "Environment:"
+            echo "  PIPER_VOICE_DIR  Voice directory (default: ~/.local/share/piper/voices)"
+            echo "  PIPER_VOICE      Default voice model name"
+            exit 0
+            ;;
+        -*) echo "Unknown option: $1" >&2; exit 1 ;;
+        *) TEXT="$1"; shift ;;
+    esac
+done
+
+VOICE_PATH="$PIPER_VOICE_DIR/$PIPER_VOICE.onnx"
+
+if [ ! -f "$VOICE_PATH" ]; then
+    echo "Error: Voice model not found: $VOICE_PATH" >&2
+    echo "Run 'piper-speak-install' to download voice models" >&2
+    exit 1
+fi
+
+speak() {
+    local text="$1"
+    local tmp_wav="/tmp/piper-speak-$$.wav"
+
+    [ -z "$text" ] && return
+
+    echo "$text" | piper-tts --model "$VOICE_PATH" --length_scale "$SPEED" \
+        --output_file "$tmp_wav" >/dev/null 2>&1 && pw-play "$tmp_wav"
+
+    rm -f "$tmp_wav"
+}
+
+# Get text from argument or stdin
+if [ -z "$TEXT" ]; then
+    TEXT=$(cat)
+fi
+
+if [ -z "$TEXT" ]; then
+    echo "Error: No text provided" >&2
+    exit 1
+fi
+
+if $BACKGROUND; then
+    speak "$TEXT" >/dev/null 2>&1 &
+else
+    speak "$TEXT"
+fi
