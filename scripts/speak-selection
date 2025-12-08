@@ -9,21 +9,9 @@
 # Suggested keybinding (Hyprland):
 #   bind = SUPER SHIFT, period, exec, speak-selection
 
-SESSION_MARKER="/tmp/piper-speak-session"
-LOCK_FILE="/tmp/piper-speak-lock"
-
-# Use a lock to prevent race conditions with rapid hotkey presses
-exec 200>"$LOCK_FILE"
-flock -n 200 || exit 0  # Exit if another instance is running
-
-# Toggle behavior: if speaking, stop and exit
-if [ -f "$SESSION_MARKER" ]; then
-    rm -f "$SESSION_MARKER"
-    pkill -9 -f "piper-tts" 2>/dev/null
-    pkill -9 -f "pw-play.*/tmp/piper-speak" 2>/dev/null
-    sleep 0.1
-    exit 0
-fi
+# Kill any existing piper/pw-play process (toggle behavior)
+pkill -f "piper-tts.*piper.*voices" 2>/dev/null && exit 0
+pkill -f "pw-play.*/tmp/piper-speak" 2>/dev/null && exit 0
 
 # Get primary selection (highlighted text)
 text=$(wl-paste --primary 2>/dev/null)
@@ -33,4 +21,4 @@ if [ -z "$text" ]; then
     exit 0
 fi
 
-echo "$text" | piper-speak --speed 0.8 --bg
+echo "$text" | piper-speak --bg

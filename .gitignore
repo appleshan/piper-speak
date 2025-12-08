@@ -1,7 +1,10 @@
-# makepkg build artifacts
+# Build artifacts
+/piper-speak
 *.pkg.tar.zst
 *.tar.gz
-*.onnx
-*.onnx.json
 src/
 pkg/
+
+# Voice models (large binary files)
+*.onnx
+*.onnx.json
