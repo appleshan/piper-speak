@@ -9,7 +9,7 @@ license=('MIT')
 depends=('piper-tts' 'pipewire-pulse' 'wl-clipboard' 'curl')
 optdepends=('libnotify: for speak-selection notifications')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/kgn/piper-speak/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('ba3acde44e0b7c9d425d0ebbdea66f8d1bce8e3c0e20ca6c7344edea18c8a60c')
 
 package() {
     cd "$pkgname-$pkgver"
