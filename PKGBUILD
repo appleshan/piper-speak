@@ -1,6 +1,6 @@
 # Maintainer: David Keegan <me@davidkeegan.com>
 pkgname=piper-speak
-pkgver=1.1.0
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="Simple text-to-speech wrapper for Piper TTS on Linux"
 arch=('any')
