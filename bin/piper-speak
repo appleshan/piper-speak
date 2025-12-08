@@ -11,7 +11,7 @@
 PIPER_VOICE="${PIPER_VOICE:-en_US-lessac-medium}"
 SPEED="0.7"
 BACKGROUND=false
-CHUNK_SIZE="${PIPER_CHUNK_SIZE:-800}"
+CHUNK_SIZE="${PIPER_CHUNK_SIZE:-400}"
 TEXT=""
 
 # Voice search paths (user dir first, then system)
@@ -35,7 +35,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --speed NUM       Length scale (default: 0.7, lower = faster)"
             echo "  --bg              Run in background"
             echo "  --voice NAME      Voice model name (default: en_US-lessac-medium)"
-            echo "  --chunk-size NUM  Max characters per chunk (default: 800)"
+            echo "  --chunk-size NUM  Max characters per chunk (default: 400)"
             echo ""
             echo "Environment:"
             echo "  PIPER_VOICE_DIR   User voice directory (default: ~/.local/share/piper/voices)"

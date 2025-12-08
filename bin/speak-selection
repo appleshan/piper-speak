@@ -10,12 +10,18 @@
 #   bind = SUPER SHIFT, period, exec, speak-selection
 
 SESSION_MARKER="/tmp/piper-speak-session"
+LOCK_FILE="/tmp/piper-speak-lock"
+
+# Use a lock to prevent race conditions with rapid hotkey presses
+exec 200>"$LOCK_FILE"
+flock -n 200 || exit 0  # Exit if another instance is running
 
 # Toggle behavior: if speaking, stop and exit
 if [ -f "$SESSION_MARKER" ]; then
     rm -f "$SESSION_MARKER"
-    pkill -f "piper-tts.*piper/voices" 2>/dev/null
-    pkill -f "pw-play.*/tmp/piper-speak" 2>/dev/null
+    pkill -9 -f "piper-tts" 2>/dev/null
+    pkill -9 -f "pw-play.*/tmp/piper-speak" 2>/dev/null
+    sleep 0.1
     exit 0
 fi
 

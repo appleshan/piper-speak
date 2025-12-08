@@ -50,8 +50,8 @@ echo "Background speech" | piper-speak --bg
 # Large text is automatically chunked to prevent CPU overload
 cat large-document.txt | piper-speak --bg
 
-# Adjust chunk size (default: 800 characters)
-cat book.txt | piper-speak --chunk-size 1000 --bg
+# Adjust chunk size (default: 400 characters)
+cat book.txt | piper-speak --chunk-size 600 --bg
 ```
 
 ### speak-selection
@@ -91,7 +91,7 @@ Environment variables:
 |----------|---------|-------------|
 | `PIPER_VOICE_DIR` | `~/.local/share/piper/voices` | Voice model directory |
 | `PIPER_VOICE` | `en_US-lessac-medium` | Default voice model |
-| `PIPER_CHUNK_SIZE` | `800` | Max characters per chunk for large text |
+| `PIPER_CHUNK_SIZE` | `400` | Max characters per chunk for large text |
 
 ## Voices
 
