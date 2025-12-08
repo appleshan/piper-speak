@@ -1,5 +1,7 @@
 # makepkg build artifacts
 *.pkg.tar.zst
 *.tar.gz
+*.onnx
+*.onnx.json
 src/
 pkg/
