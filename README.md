@@ -8,7 +8,7 @@ Simple text-to-speech wrapper for [Piper TTS](https://github.com/rhasspy/piper) 
 
 ## Installation
 
-### Arch Linux (AUR)
+### [Arch Linux (AUR)](https://aur.archlinux.org/packages/piper-speak)
 
 ```bash
 yay -S piper-speak
