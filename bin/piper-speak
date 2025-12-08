@@ -1,15 +1,15 @@
 #!/bin/bash
 # piper-speak - Simple Piper TTS wrapper
-# Usage: echo "text" | piper-speak [--speed 0.7] [--bg]
+# Usage: echo "text" | piper-speak [--speed NUM] [--bg]
 #        piper-speak "text to speak"
 #
 # Options:
-#   --speed  Length scale (default: 0.9, lower = faster)
+#   --speed  Length scale (default: 0.7, lower = faster)
 #   --bg     Run in background
 
 PIPER_VOICE_DIR="${PIPER_VOICE_DIR:-$HOME/.local/share/piper/voices}"
 PIPER_VOICE="${PIPER_VOICE:-en_US-lessac-medium}"
-SPEED="0.9"
+SPEED="0.7"
 BACKGROUND=false
 TEXT=""
 
@@ -23,7 +23,7 @@ while [[ $# -gt 0 ]]; do
             echo "       piper-speak [options] \"text to speak\""
             echo ""
             echo "Options:"
-            echo "  --speed NUM   Length scale (default: 0.9, lower = faster)"
+            echo "  --speed NUM   Length scale (default: 0.7, lower = faster)"
             echo "  --bg          Run in background"
             echo "  --voice NAME  Voice model name (default: en_US-lessac-medium)"
             echo ""

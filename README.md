@@ -31,8 +31,8 @@ echo "Hello world" | piper-speak
 # Direct argument
 piper-speak "Hello world"
 
-# Adjust speed (lower = faster)
-echo "Fast speech" | piper-speak --speed 0.7
+# Adjust speed (lower = faster, default: 0.7)
+echo "Slower speech" | piper-speak --speed 1.0
 
 # Run in background
 echo "Background speech" | piper-speak --bg
