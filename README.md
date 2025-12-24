@@ -30,8 +30,8 @@ Requires Go 1.21+
 git clone https://github.com/kgn/piper-speak.git
 cd piper-speak
 go build -o piper-speak ./cmd/piper-speak/
-sudo install -Dm755 piper-speak /usr/bin/piper-speak
-sudo install -Dm755 scripts/speak-selection /usr/bin/speak-selection
+sudo install -Dm755 piper-speak /usr/local/bin/piper-speak
+sudo install -Dm755 scripts/speak-selection /usr/local/bin/speak-selection
 
 # Download a voice model
 mkdir -p ~/.local/share/piper/voices
@@ -44,8 +44,8 @@ curl -L "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessa
 ### Dependencies
 
 - [piper-tts](https://github.com/rhasspy/piper) - `yay -S piper-tts-bin`
-- pipewire - `pacman -S pipewire pipewire-pulse`
-- wl-clipboard - `pacman -S wl-clipboard` (for speak-selection)
+- pipewire - `pacman -S pipewire pipewire-pulse pipewire-audio`
+- xclip - `pacman -S xclip` (for speak-selection)
 
 ## Usage
 
@@ -77,12 +77,7 @@ Reads highlighted text aloud. Press the hotkey again to stop.
 
 Add a keybinding in your window manager:
 
-**Hyprland:**
-```conf
-bind = SUPER SHIFT, period, exec, speak-selection
-```
-
-**Sway:**
+**i3-wm:**
 ```conf
 bindsym $mod+Shift+period exec speak-selection
 ```

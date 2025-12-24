@@ -4,7 +4,7 @@
 #
 # Features:
 #   - Toggle behavior: press hotkey again to stop speaking
-#   - Uses wl-paste to get highlighted text
+#   - Uses xclip to get highlighted text
 #
 # Suggested keybinding (Hyprland):
 #   bind = SUPER SHIFT, period, exec, speak-selection
@@ -18,11 +18,11 @@ if pkill -x "piper-speak" 2>/dev/null; then
 fi
 
 # Get primary selection (highlighted text)
-text=$(wl-paste --primary 2>/dev/null)
+text=$(xclip -o 2>/dev/null)
 
 if [ -z "$text" ]; then
     notify-send -t 2000 "Speak Selection" "No text selected" 2>/dev/null || true
     exit 0
 fi
 
-echo "$text" | piper-speak --bg
+echo "$text" | piper-speak --bg --voice en_US-ryan-high --speed 1.6
